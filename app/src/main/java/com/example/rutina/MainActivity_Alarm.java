@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -137,6 +138,7 @@ public class MainActivity_Alarm extends AppCompatActivity{
     }
 
     private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name="Anaisha reminder app";
             String description ="Alarm Manager";
             int importance = NotificationManager.IMPORTANCE_HIGH;
@@ -146,5 +148,7 @@ public class MainActivity_Alarm extends AppCompatActivity{
             NotificationManager notificationManager= getSystemService(NotificationManager.class);
             mbuilder.setSound(alarmsound);
             notificationManager.createNotificationChannel(channel);
+
+        }
     }
 }

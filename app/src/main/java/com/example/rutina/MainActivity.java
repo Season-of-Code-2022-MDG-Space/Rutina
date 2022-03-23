@@ -2,11 +2,10 @@ package com.example.rutina;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.DatePicker;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,27 +18,26 @@ import com.example.rutina.Model.ToDoModel;
 import com.example.rutina.Utils.DatabaseHandler;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements DialogCloseListener {
+public class MainActivity extends AppCompatActivity implements DialogCloseListener{
 
+    private DatabaseHandler db;
+
+    private RecyclerView tasksRecyclerView;
     private ToDoAdapter tasksAdapter;
+    private FloatingActionButton fab;
+    EditText date;
+    int m;
+    DatePickerDialog.OnDateSetListener OnDateSetListener;
 
     private List<ToDoModel> taskList;
-    private DatabaseHandler db;
-    EditText date;
-    RecyclerView tasksRecyclerView;
-
-    DatePickerDialog.OnDateSetListener onDateSetListener;
-    int m;
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Objects.requireNonNull(getSupportActionBar()).hide();
@@ -47,20 +45,20 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
         db = new DatabaseHandler(this);
         db.openDatabase();
 
-        taskList = new ArrayList<>();
-
         tasksRecyclerView = findViewById(R.id.tasksRecyclerView);
         tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        tasksAdapter = new ToDoAdapter(db, this);
+        tasksAdapter = new ToDoAdapter(db,MainActivity.this);
         tasksRecyclerView.setAdapter(tasksAdapter);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerItemTouchHelper(tasksAdapter));
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new RecyclerItemTouchHelper(tasksAdapter));
         itemTouchHelper.attachToRecyclerView(tasksRecyclerView);
+
+        fab = findViewById(R.id.fab);
 
         taskList = db.getAllTasks();
         Collections.reverse(taskList);
+
         tasksAdapter.setTasks(taskList);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,55 +68,22 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
             }
         });
 
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        Button btn = (Button) findViewById(R.id.alarm);
 
-        EditText date = findViewById(R.id.date);
-        onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month+1;
-                m = month;
-                String ans = day + "/" + month + "/" + year;
-                date.setText(ans);
-
-            }
-
-        };
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        MainActivity.this, android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth,
-                        onDateSetListener, year, month, day);
-                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                datePickerDialog.show();
-
-
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MainActivity_Alarm.class));
             }
         });
     }
 
     @Override
-    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        month = month+1;
-        m = month;
-        String ans = day + "/" + month + "/" + year;
-        date.setText(ans);
-    }
-
-    @Override
-    public void handleDialogClose(DialogInterface dialog) {
+    public void handleDialogClose(DialogInterface dialog){
         taskList = db.getAllTasks();
         Collections.reverse(taskList);
         tasksAdapter.setTasks(taskList);
         tasksAdapter.notifyDataSetChanged();
     }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-        super.onPointerCaptureChanged(hasCapture);
-    }
 }
+

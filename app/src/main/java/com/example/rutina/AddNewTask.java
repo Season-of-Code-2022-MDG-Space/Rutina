@@ -17,11 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.example.rutina.Model.ToDoModel;
-import com.example.rutina.Utils.DatabaseHandler;
+import com.example.rutina.*;
+import com.example.rutina.Adapter.*;
+import com.example.rutina.Model.*;
+import com.example.rutina.Utils.*;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-import java.util.Objects;
 
 public class AddNewTask extends BottomSheetDialogFragment {
 
@@ -49,7 +49,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.new_task, container, false);
-        Objects.requireNonNull(getDialog()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         return view;
     }
@@ -60,7 +60,6 @@ public class AddNewTask extends BottomSheetDialogFragment {
         newTaskText = requireView().findViewById(R.id.newTaskText);
         newTaskSaveButton = getView().findViewById(R.id.newTaskButton);
         description = getView().findViewById(R.id.description);
-        date = getView().findViewById(R.id.date);
 
 
 
@@ -134,11 +133,8 @@ public class AddNewTask extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 String text = newTaskText.getText().toString();
                 String abc = description.getText().toString();
-                String da = date.getText().toString();
                 if(finalIsUpdate){
                     db.updateTask(bundle.getInt("id"), text);
-                    ToDoModel task = new ToDoModel();
-                    db.insertTask(task);
                 }
                 else {
                     ToDoModel task = new ToDoModel();

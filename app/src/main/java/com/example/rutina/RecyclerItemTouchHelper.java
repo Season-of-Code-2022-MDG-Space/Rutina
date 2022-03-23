@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.rutina.Adapter.ToDoAdapter;
+import com.example.rutina.Adapter.*;
 
 public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 

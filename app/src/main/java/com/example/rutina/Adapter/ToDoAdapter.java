@@ -12,11 +12,11 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.rutina.AddNewTask;
 import com.example.rutina.MainActivity;
-import com.example.rutina.Model.ToDoModel;
+import com.example.rutina.*;
+import com.example.rutina.Model.*;
 import com.example.rutina.R;
-import com.example.rutina.Utils.DatabaseHandler;
+import com.example.rutina.Utils.*;
 
 
 import java.util.List;
